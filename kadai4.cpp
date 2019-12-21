@@ -4,33 +4,39 @@ using namespace std;
 class person{
 public:
   string address;
+  string id;
   string name;
 };
 
 class addressbook{
-  person friends[100]{friends = new person[maximumFriends]};
+  person* friends;
   int numberOfFriends;
 public:
   addressbook();
+  ~addressbook();
   void listFriends();
-  void addFriend(string n, string a);
+  void addFriend(string name,string address);
   person find(string query);
 };
 
-// constructor
 addressbook::addressbook(){
   numberOfFriends = 0;
+  friends = new person [100];
 }
 
-void addressbook::addFriend(string n, string a){
-  friends[numberOfFriends].name = n;
-  friends[numberOfFriends].address = a;
+addressbook::~addressbook(){
+  delete[] friends;
+}
+
+void addressbook::addFriend(string name,string address){
+  friends[numberOfFriends].name = name;
+  friends[numberOfFriends].address = address;
   numberOfFriends++;
 }
 
 void addressbook::listFriends(){
   for(int i = 0; i < numberOfFriends; i++){
-      cout << friends[i].name << ":" << friends[i].address << "\n";
+    cout << friends[i].name << ":"<<friends[i].address<<"\n";
   }
 }
 
@@ -40,8 +46,9 @@ person addressbook::find(string query){
       return friends[i];
     }
   }
-  person no_one;
-  return no_one;
+  person noone;
+  noone.name = "";
+  return noone;
 }
 
 int main()
@@ -56,17 +63,19 @@ int main()
     cout << "住所録に登録する名前を入力してください（終了するにはquitと入力してください）: ";
     cin >> name;
     if(name == "quit"){break;}
-    cout << "住所録に登録する住所を入力してください（終了するにはquitと入力してください）: ";
+    cout << "住所録に登録する住所を入力してください(終了するに􏰀 quit と入力してください):";
     cin >> address;
-    //   cout << "name.length() = " << name.length() << "\n";
-    if(address == "quit"){break;}
-    abook.addFriend(name, address);
+    abook.addFriend(name,address);
   }
-  cout << "\n住所録リスト:\n";
+
+  cout << "\n名前リスト:\n";
   abook.listFriends();
 
-  cout << "検索したい人物の名前を入力して下さい：";
+  cout << "検索：";
   cin >> query;
+  person res = abook.find(query);
   found = abook.find(query);
-  cout << found.name << ":" << found.address << "\n";
+  if(found.name == ""){
+  cout << "見つかりませんでした。\n"; }else{
+  cout << "検索結果"<<found.name << ":" << found.address<<"\n";}
 }
